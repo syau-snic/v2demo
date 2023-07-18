@@ -1,0 +1,61 @@
+{
+  "log": {
+    "access": "/var/log/v2/ten_access.log",
+    "error": "/var/log/v2/ten_error.log",
+    "loglevel": "warning"
+  },
+  "inbounds": [
+    {
+      "port": 21704,
+      "listen": "0.0.0.0",
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "f86d7f14-501c-48e4-a46b-24eda0e6e525",
+            "alterId": 100,
+            "email": "ck",
+            "level": 0
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "path": "/ray"
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIP"
+      },
+      "tag": "free"
+    },
+    {
+      "protocol": "blackhole",
+      "settings": {},
+      "tag": "blocked"
+    }
+  ],
+  "routing": {
+    "domainStrategy": "IPOnDemand",
+    "rules": [
+      {
+        "type": "field",
+        "domain": [
+          "geosite:category-ads-all"
+        ],
+        "outboundTag": "blocked"
+      },
+      {
+        "type": "field",
+        "user": "ck",
+        "outboundTag": "free"
+      }
+    ]
+  }
+}

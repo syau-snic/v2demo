@@ -1,0 +1,34 @@
+log:
+  access: /var/log/v2/ten_access.log
+  error: /var/log/v2/ten_error.log
+  loglevel: warning
+reverse:
+  portals:
+    - tag: portal_qb
+      domain: bri.xyz
+inbounds:
+  - tag: dok_qb
+    port: 22
+    protocol: dokodemo-door
+    settings:
+      address: 0.0.0.0
+  - tag: inqb
+    port: 80
+    listen: 0.0.0.0
+    protocol: vless
+    settings:
+      clients:
+        - id: 19f310dd-556d-44e0-9893-e160f0b9face
+      decryption: none
+    streamSettings:
+      network: ws
+      wsSettings:
+        path: /v2/proxy/qb
+routing:
+  domainStrategy: IPIfNonMatch
+  rules:
+    - type: field
+      inboundTag:
+        - inqb
+        - dok_qb
+      outboundTag: portal_qb

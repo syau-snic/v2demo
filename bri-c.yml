@@ -1,0 +1,36 @@
+reverse:
+  bridges:
+    - tag: bridge_qb
+      domain: bri.xyz
+outbounds:
+  - tag: sshout
+    protocol: freedom
+    settings:
+      redirect: 127.0.0.1:22
+  - tag: sshcon
+    protocol: vless
+    settings:
+      vnext:
+        - address: demo.xyz
+          port: 443
+          users:
+            - id: 19f310dd-556d-44e0-9893-e160f0b9face
+              encryption: none
+    streamSettings:
+      network: ws
+      security: tls
+      wsSettings:
+        path: /v2/proxy/qb
+routing:
+  domainStrategy: IPIfNonMatch
+  rules:
+    - type: field
+      inboundTag:
+        - bridge_qb
+      domain:
+        - full:bri.xyz
+      outboundTag: sshcon
+    - type: field
+      inboundTag:
+        - bridge_qb
+      outboundTag: sshout
